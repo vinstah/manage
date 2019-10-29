@@ -1,0 +1,5 @@
+input PostUpdatedInput {
+  id: ID!
+  title: String!
+  text: String!
+}

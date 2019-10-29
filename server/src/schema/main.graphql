@@ -1,0 +1,36 @@
+# import Post, Role from "../generated/prisma.graphql"
+# import * from "./directives.graphql"
+# import * from "./inputs.graphql"
+# import * from "./types.graphql"
+
+type Query {
+  feed: [Post!]!
+  drafts: [Post!]! @isAuthenticated
+  post(id: ID!): Post
+  self: User @isAuthenticated
+  auth(authId: String!): AuthPayload
+  user(id: ID!): User @maxDepth(depth: 1)
+  userContent(id: ID!): [Post] @maxDepth(depth: 1)
+  recentPosts: [Post] @maxDepth(depth: 2)
+}
+
+type Mutation {
+  authenticate(idToken: String!): User!
+  createDraft(title: String!, text: String!): Post! @isAuthenticated
+  publishPost(id: ID!): Post! @isAuthenticated
+  deletePost(id: ID!): Post! @isAuthenticated
+  updatePost(input: PostUpdatedInput!): Post!
+    @isAuthenticated
+    @maxDepth(depth: 2)
+
+  deleteUser(where: UserWhereUniqueInput!): User @hasRole(roles: [ADMIN])
+}
+
+type Subscription {
+  feedSubscription: PostSubscriptionPayload!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
